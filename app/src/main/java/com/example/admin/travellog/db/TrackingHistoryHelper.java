@@ -15,6 +15,7 @@ public class TrackingHistoryHelper extends SQLiteOpenHelper {
     private static final String SQL_CREATE_TRACKING_HISTORY_TABLE_FORMAT = "CREATE TABLE IF NOT EXISTS TrackingHistory " +
             "(" +
             " _id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            "logTitle TEXT NOT NULL " +
             "averageSpeed INTEGER NOT NULL, " +
             "date REAL NOT NULL, " +
             "distance REAL NOT NULL, " +

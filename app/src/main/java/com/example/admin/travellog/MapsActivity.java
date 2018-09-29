@@ -40,7 +40,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private TrackingHistoryDAO mTrackingHistoryDAO;
     private boolean mIsInitialized = false;
     private boolean mIsTracking = false;
-    //private TextView mDistanceTextView, mSpeedTextView;
+    private TextView mDistanceTextView;
+    // , mSpeedTextView;
     private TextView mTimeTextView;
     private GoogleMap mMap;
     private ProgressDialog mProgressDialog, mSaveDialog;
@@ -56,6 +57,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private FloatingActionButton mMemoButton;
     private MemoDAO memoDAO;
 
+    private TrackingHistory trackingHistory;
     private Memo memoBeans;
     private ArrayList<Memo> memoArr;
 
@@ -68,8 +70,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mTrackingHistoryDAO = new TrackingHistoryDAO(getApplicationContext());
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
 
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+        updateMap();
+
         mPolyLineOptions = new PolylineOptions();
         mPolyLineOptions.color(Color.parseColor("#8BC34A"));
         mPolyLineOptions.width(5);
@@ -77,6 +79,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mTimer = new Timer();
         initViews();
 
+    }
+
+    public void  updateMap() {
+
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
     }
 
     private void initDialog() {
@@ -93,7 +109,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void initViews() {
-        //mDistanceTextView = (TextView) findViewById(R.id.distance_tv);
+        mDistanceTextView = (TextView) findViewById(R.id.distance_tv);
         //mSpeedTextView = (TextView) findViewById(R.id.speed_tv);
         mTimeTextView = (TextView) findViewById(R.id.time_tv);
 
@@ -201,7 +217,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                //mDistanceTextView.setText(FormatUtil.getDouble(mDistance) + " m");
+                                mDistanceTextView.setText(FormatUtil.getDouble(mDistance) + " m");
                                 //mSpeedTextView.setText(FormatUtil.getDouble(mCurrentSpeed) + " km/h");
                                 mMap.clear();
                                 mMap.addPolyline(mPolyLineOptions);
@@ -225,6 +241,40 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode==1){
+            if(resultCode==RESULT_OK){
+                //데이터 받기
+                String logTitle = data.getStringExtra("title");
+
+                Toast.makeText(MapsActivity.this, logTitle, Toast.LENGTH_SHORT).show();
+
+                trackingHistory.setTitle(logTitle);
+
+                Toast.makeText(MapsActivity.this, trackingHistory.toString(), Toast.LENGTH_SHORT).show();
+
+                ////
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mTrackingHistoryDAO.save(trackingHistory);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                mSaveDialog.dismiss();
+                                Toast.makeText(MapsActivity.this, "트래킹 기록이 저장되었습니다!", Toast.LENGTH_SHORT).show();
+                                finish();
+                            }
+                        });
+                    }
+                }).start();
+                ////
+            }
+        }
+    }
+
+
     private View.OnClickListener mOnToggleButtonClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -247,8 +297,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 List<LatLng> recordedPath = mPolyLineOptions.getPoints();
                 int size = recordedPath.size();
 
-                if (size > 1) {
-                    mSaveDialog.show();
+                    //mSaveDialog.show();
                     List<Coord> coords = new ArrayList<>();
                     for (LatLng each : recordedPath) {
                         coords.add(new Coord(each.latitude, each.longitude));
@@ -257,8 +306,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     String pathJson = new Gson().toJson(coords);
                     double time = mTime / 1000.0;
                     double averageSpeed = mDistance / time;
-                    final TrackingHistory trackingHistory = new TrackingHistory(mTime, averageSpeed, mDistance, pathJson, System.currentTimeMillis());
+                    trackingHistory = new TrackingHistory(mTime, averageSpeed, mDistance, pathJson, System.currentTimeMillis());
 
+                    //데이터 담아서 팝업(액티비티) 호출
+                    Intent intent = new Intent(MapsActivity.this, InputTitlePopupActivtiy.class);
+                    intent.putExtra("trackingHistory", trackingHistory);
+                    startActivityForResult(intent, 1);
+
+
+                    //// 잠깐 닫아놓기!
+                    /*
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
@@ -273,11 +330,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             });
                         }
                     }).start();
+*/
 
-                } else {
-                    Toast.makeText(MapsActivity.this, "움직임이 적어 저장하지 않습니다!", Toast.LENGTH_SHORT).show();
-                    finish();
-                }
             } else {
                 finish();
             }

@@ -36,6 +36,7 @@ public class TrackingHistoryDAO {
 
         // 삽입할 메모의 제목, 내용, 시간을 ContentValues 에 넣습니다.
         // 메모의 id 는 AUTO INCREMENT 이므로 추가하지 않습니다.
+        values.put("logTitle", data.getTitle());
         values.put("elapsedTime", data.getElapsedTime());
         values.put("averageSpeed", data.getAverageSpeed());
         values.put("distance", data.getDistance());

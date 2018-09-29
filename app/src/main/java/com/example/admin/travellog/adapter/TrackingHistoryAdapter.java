@@ -62,7 +62,7 @@ public class TrackingHistoryAdapter extends CursorAdapter {
         long date = cursor.getLong(cursor.getColumnIndex("date"));
 
         holder.mTimeTextView.setText(FormatUtil.getTime(elapsedTime));
-        //holder.mDistanceTextView.setText(FormatUtil.getDouble(distance) + " m");
+        holder.mDistanceTextView.setText(FormatUtil.getDouble(distance) + " m");
         //holder.mAverageSpeedTextView.setText(FormatUtil.getDouble(averageSpeed) + " km/h");
         holder.mDateTextView.setText(mSimpleDateFormat.format(new Date(date)));
 
@@ -72,7 +72,7 @@ public class TrackingHistoryAdapter extends CursorAdapter {
         TextView mDistanceTextView, mAverageSpeedTextView, mTimeTextView, mDateTextView;
 
         ViewHolder(View itemView) {
-            //mDistanceTextView = (TextView) itemView.findViewById(R.id.item_distance_tv);
+            mDistanceTextView = (TextView) itemView.findViewById(R.id.item_distance_tv);
             //mAverageSpeedTextView = (TextView) itemView.findViewById(R.id.item_speed_tv);
             mTimeTextView = (TextView) itemView.findViewById(R.id.item_time_tv);
             mDateTextView = (TextView) itemView.findViewById(R.id.item_date_tv);
