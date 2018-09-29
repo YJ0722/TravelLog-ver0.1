@@ -38,7 +38,8 @@ public class TrackingHistoryDAO {
         // 메모의 id 는 AUTO INCREMENT 이므로 추가하지 않습니다.
         values.put("logTitle", data.getTitle());
         values.put("elapsedTime", data.getElapsedTime());
-        values.put("averageSpeed", data.getAverageSpeed());
+        // TODO : 추후 삭제 필요
+        values.put("averageSpeed", 0);
         values.put("distance", data.getDistance());
         values.put("pathJson", data.getPathJson());
         values.put("date", data.getDate());

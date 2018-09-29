@@ -54,6 +54,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Timer mTimer;
     private PolylineOptions mPolyLineOptions;
 
+    private int recordedPathSize;
+
     private FloatingActionButton mMemoButton;
     private MemoDAO memoDAO;
 
@@ -244,32 +246,85 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode==1){
+//            if(resultCode==1){
             if(resultCode==RESULT_OK){
-                //데이터 받기
-                String logTitle = data.getStringExtra("title");
 
-                Toast.makeText(MapsActivity.this, logTitle, Toast.LENGTH_SHORT).show();
+                if(recordedPathSize > 1) {
+                    //데이터 받기
+                    String logTitle = data.getStringExtra("title");
 
-                trackingHistory.setTitle(logTitle);
+                    Toast.makeText(MapsActivity.this, logTitle, Toast.LENGTH_SHORT).show();
 
-                Toast.makeText(MapsActivity.this, trackingHistory.toString(), Toast.LENGTH_SHORT).show();
+                    trackingHistory.setTitle(logTitle);
 
-                ////
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mTrackingHistoryDAO.save(trackingHistory);
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                mSaveDialog.dismiss();
-                                Toast.makeText(MapsActivity.this, "트래킹 기록이 저장되었습니다!", Toast.LENGTH_SHORT).show();
-                                finish();
-                            }
-                        });
-                    }
-                }).start();
-                ////
+                    Toast.makeText(MapsActivity.this, trackingHistory.toString(), Toast.LENGTH_SHORT).show();
+
+                    ////
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mTrackingHistoryDAO.save(trackingHistory);
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    mSaveDialog.dismiss();
+                                    Toast.makeText(MapsActivity.this, "트래킹 기록이 저장되었습니다!", Toast.LENGTH_SHORT).show();
+                                    finish();
+                                }
+                            });
+                        }
+                    }).start();
+                    ////
+                } else {
+                    Toast.makeText(MapsActivity.this, "움직임이 적어 저장하지 않습니다!", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+
+            }
+        }
+
+        // 메모 저장 후 돌아올 때
+        if(requestCode==2){
+//            if(resultCode==1){
+            if(resultCode==RESULT_OK){
+
+                String memoTitle = data.getStringExtra("memoTitle");
+                String memoContent = data.getStringExtra("memoContent");
+
+                Toast.makeText(MapsActivity.this, "t: " + memoTitle + "\nc:" + memoContent, Toast.LENGTH_SHORT).show();
+                /*
+                if(recordedPathSize > 1) {
+                    //데이터 받기
+                    String logTitle = data.getStringExtra("title");
+
+                    Toast.makeText(MapsActivity.this, logTitle, Toast.LENGTH_SHORT).show();
+
+                    trackingHistory.setTitle(logTitle);
+
+                    Toast.makeText(MapsActivity.this, trackingHistory.toString(), Toast.LENGTH_SHORT).show();
+
+                    ////
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mTrackingHistoryDAO.save(trackingHistory);
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    mSaveDialog.dismiss();
+                                    Toast.makeText(MapsActivity.this, "트래킹 기록이 저장되었습니다!", Toast.LENGTH_SHORT).show();
+                                    finish();
+                                }
+                            });
+                        }
+                    }).start();
+                    ////
+                } else {
+                    Toast.makeText(MapsActivity.this, "움직임이 적어 저장하지 않습니다!", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+
+                    */
             }
         }
     }
@@ -295,7 +350,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             if (mIsTracking) {
                 mOnToggleButtonClickListener.onClick(mToggleButton);
                 List<LatLng> recordedPath = mPolyLineOptions.getPoints();
-                int size = recordedPath.size();
+                recordedPathSize = recordedPath.size();
 
                     //mSaveDialog.show();
                     List<Coord> coords = new ArrayList<>();
@@ -351,10 +406,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             LatLng location = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
             //mMap.addMarker(new MarkerOptions().position(location));
 
-            // 현재 위치는 intent에 담아 MemoActivity로 이동
-            Intent intent = new Intent(MapsActivity.this, MemoActivtiy.class);
-            intent.putExtra("location", location);
-            startActivity(intent);
+            // TODO : 팝업 연결 후
+//            // 현재 위치는 intent에 담아 MemoActivity로 이동
+//            Intent intent = new Intent(MapsActivity.this, MemoActivtiy.class);
+//            intent.putExtra("location", location);
+//            startActivity(intent);
+
+            //데이터 담아서 팝업(액티비티) 호출
+            Intent intent = new Intent(MapsActivity.this, MemoPopupActivity.class);
+            startActivityForResult(intent, 2);
         }
     };
 }

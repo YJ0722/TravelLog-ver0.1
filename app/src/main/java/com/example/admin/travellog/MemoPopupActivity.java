@@ -8,15 +8,12 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
-import com.example.admin.travellog.models.TrackingHistory;
+public class MemoPopupActivity extends Activity {
 
-public class InputTitlePopupActivtiy extends Activity {
-
-    Button saveLogBtn, cancelLogBtn;
-    EditText inputLogTitle;
-    String logTitle;
+    Button saveMemoBtn, cancelMemoBtn;
+    EditText inputMemoTitle, inputMemoContent;
+    String memoTitle, memoContent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,37 +21,35 @@ public class InputTitlePopupActivtiy extends Activity {
 
         //타이틀바 없애기
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.activity_input_title_popup_activtiy);
+        setContentView(R.layout.activity_memo_popup);
 
         initView();
 
-        //데이터 가져오기
-        Intent intent = getIntent();
-        TrackingHistory trackingHistory = intent.getParcelableExtra("trackingHistory");
-
-        Toast.makeText(InputTitlePopupActivtiy.this, trackingHistory.toString(), Toast.LENGTH_SHORT).show();
     }
 
     private void initView() {
-        inputLogTitle = (EditText) findViewById(R.id.inputLogTitle);
-        saveLogBtn = (Button) findViewById(R.id.saveLogBtn);
-        cancelLogBtn = (Button) findViewById(R.id.cancelLogBtn);
+        inputMemoTitle = (EditText) findViewById(R.id.inputMemoTitle);
+        inputMemoContent = (EditText) findViewById(R.id.inputMemoContent);
+        saveMemoBtn = (Button) findViewById(R.id.saveMemoBtn);
+        cancelMemoBtn = (Button) findViewById(R.id.cancelMemoBtn);
 
-        saveLogBtn.setOnClickListener(saveLogBtnOnClickListener);
-        cancelLogBtn.setOnClickListener(cancelLogBtnOnClickListener);
+        saveMemoBtn.setOnClickListener(saveMemoBtnOnClickListener);
+        cancelMemoBtn.setOnClickListener(cancelMemoBtnOnClickListener);
     }
 
     // 확인 버튼 클릭 리스너
-    private View.OnClickListener saveLogBtnOnClickListener = new View.OnClickListener() {
+    private View.OnClickListener saveMemoBtnOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            logTitle = inputLogTitle.getText().toString();
+            memoTitle = inputMemoTitle.getText().toString();
+            memoContent = inputMemoContent.getText().toString();
 
             //데이터 전달하기
             Intent intent = new Intent();
-            intent.putExtra("title", logTitle);
+            intent.putExtra("memoTitle", memoTitle);
+            intent.putExtra("memoContent", memoContent);
             setResult(RESULT_OK, intent);
-//            setResult(1, intent);
+//            setResult(2, intent);
 
             //액티비티(팝업) 닫기
             finish();
@@ -62,7 +57,7 @@ public class InputTitlePopupActivtiy extends Activity {
     };
 
     // 취소 버튼 클릭 리스너
-    private View.OnClickListener cancelLogBtnOnClickListener = new View.OnClickListener() {
+    private View.OnClickListener cancelMemoBtnOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
 

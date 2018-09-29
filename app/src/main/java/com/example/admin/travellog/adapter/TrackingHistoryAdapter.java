@@ -33,12 +33,13 @@ public class TrackingHistoryAdapter extends CursorAdapter {
         TrackingHistory trackingHistory = null;
 
         if (cursor.moveToPosition(position)) {
+            String logTitle = cursor.getString(cursor.getColumnIndex("logTitle"));
             long elapsedTime = cursor.getLong(cursor.getColumnIndex("elapsedTime"));
             double distance = cursor.getDouble(cursor.getColumnIndex("distance"));
             double averageSpeed = cursor.getDouble(cursor.getColumnIndex("averageSpeed"));
             String pathJson = cursor.getString(cursor.getColumnIndex("pathJson"));
             long date = cursor.getLong(cursor.getColumnIndex("date"));
-            trackingHistory = new TrackingHistory(elapsedTime, averageSpeed, distance, pathJson, date);
+            trackingHistory = new TrackingHistory(logTitle, elapsedTime, averageSpeed, distance, pathJson, date);
         }
 
         return trackingHistory;
@@ -56,11 +57,13 @@ public class TrackingHistoryAdapter extends CursorAdapter {
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
         ViewHolder holder = (ViewHolder) view.getTag();
+        String logTitle = cursor.getString(cursor.getColumnIndex("logTitle"));
         long elapsedTime = cursor.getLong(cursor.getColumnIndex("elapsedTime"));
         double distance = cursor.getDouble(cursor.getColumnIndex("distance"));
         double averageSpeed = cursor.getDouble(cursor.getColumnIndex("averageSpeed"));
         long date = cursor.getLong(cursor.getColumnIndex("date"));
 
+        holder.mLogTitle.setText(logTitle);
         holder.mTimeTextView.setText(FormatUtil.getTime(elapsedTime));
         holder.mDistanceTextView.setText(FormatUtil.getDouble(distance) + " m");
         //holder.mAverageSpeedTextView.setText(FormatUtil.getDouble(averageSpeed) + " km/h");
@@ -69,9 +72,10 @@ public class TrackingHistoryAdapter extends CursorAdapter {
     }
 
     private static class ViewHolder {
-        TextView mDistanceTextView, mAverageSpeedTextView, mTimeTextView, mDateTextView;
+        TextView mLogTitle, mDistanceTextView, mAverageSpeedTextView, mTimeTextView, mDateTextView;
 
         ViewHolder(View itemView) {
+            mLogTitle = (TextView) itemView.findViewById(R.id.logTitle);
             mDistanceTextView = (TextView) itemView.findViewById(R.id.item_distance_tv);
             //mAverageSpeedTextView = (TextView) itemView.findViewById(R.id.item_speed_tv);
             mTimeTextView = (TextView) itemView.findViewById(R.id.item_time_tv);
