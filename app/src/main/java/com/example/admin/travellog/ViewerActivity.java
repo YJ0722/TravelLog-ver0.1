@@ -49,7 +49,8 @@ public class ViewerActivity extends FragmentActivity implements OnMapReadyCallba
         mMap = googleMap;
 
         Intent intent = getIntent();
-        TrackingHistory history = (TrackingHistory) intent.getSerializableExtra("data");
+        TrackingHistory history = intent.getParcelableExtra("data");
+
         String pathJson = history.getPathJson();
         ArrayList<Coord> pathList = new Gson().fromJson(pathJson, new TypeToken<ArrayList<Coord>>() {
         }.getType());
