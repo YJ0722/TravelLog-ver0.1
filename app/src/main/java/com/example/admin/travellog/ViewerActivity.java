@@ -64,8 +64,8 @@ public class ViewerActivity extends FragmentActivity implements OnMapReadyCallba
         }.getType());
 
         PolylineOptions polylineOptions = new PolylineOptions();
-        polylineOptions.color(Color.parseColor("#8BC34A"));
-        polylineOptions.width(5);
+        polylineOptions.color(Color.parseColor("#3949AB"));
+        polylineOptions.width(18);
 
         List<LatLng> latLngList = new ArrayList<>();
         for (Coord coord : pathList) {

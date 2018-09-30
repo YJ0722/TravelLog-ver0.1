@@ -76,8 +76,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         updateMap();
 
         mPolyLineOptions = new PolylineOptions();
-        mPolyLineOptions.color(Color.parseColor("#8BC34A"));
-        mPolyLineOptions.width(5);
+        mPolyLineOptions.color(Color.parseColor("#3949AB"));
+        mPolyLineOptions.width(18);
 
         mTimer = new Timer();
         initViews();
