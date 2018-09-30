@@ -1,7 +1,13 @@
 <resources>
-    <string name="app_name">Tracking123</string>
+    <string name="app_name">Travel Log</string>
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_viewer">Map</string>
-
+    <string name="abc"></string>
+    <string name="abc1"></string>
+    <string name="abc2"></string>
+    <string name="btn1"></string>
+    <string name="btn2"></string>
+    <string name="btn3"></string>
     <string name="name">Travel Log</string>
+    <string name="no_name">트래킹 이력이 존재하지 않습니다!</string>
 </resources>
