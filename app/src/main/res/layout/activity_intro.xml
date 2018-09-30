@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/backcolor"
+    android:background="@color/back"
     android:orientation="vertical">
 
     <TextView
@@ -14,14 +14,6 @@
         android:layout_height="wrap_content"
         android:text="" />
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:nextFocusDown="grav"
-        android:paddingTop="110dp"
-        android:src="@drawable/rectang2" />
 
 
 </LinearLayout>
