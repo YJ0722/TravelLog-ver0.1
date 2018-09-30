@@ -8,15 +8,13 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
-import com.example.admin.travellog.models.TrackingHistory;
+public class ExpensePopupActivity extends Activity {
 
-public class InputTitlePopupActivtiy extends Activity {
+    EditText inputExpenseTitle;
+    Button saveExpenseBtn, cancelExpenseBtn;
 
-    Button saveLogBtn, cancelLogBtn;
-    EditText inputLogTitle;
-    String logTitle;
+    String expenseTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,35 +22,29 @@ public class InputTitlePopupActivtiy extends Activity {
 
         //타이틀바 없애기
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.activity_input_title_popup_activtiy);
+        setContentView(R.layout.activity_expense_popup);
 
         initView();
-
-        //데이터 가져오기
-        Intent intent = getIntent();
-        TrackingHistory trackingHistory = intent.getParcelableExtra("trackingHistory");
-
-        Toast.makeText(InputTitlePopupActivtiy.this, trackingHistory.toString(), Toast.LENGTH_SHORT).show();
     }
 
     private void initView() {
-        inputLogTitle = (EditText) findViewById(R.id.inputLogTitle);
-        saveLogBtn = (Button) findViewById(R.id.saveLogBtn);
-        cancelLogBtn = (Button) findViewById(R.id.cancelLogBtn);
+        inputExpenseTitle = (EditText) findViewById(R.id.inputExpenseTitle);
+        saveExpenseBtn = (Button) findViewById(R.id.saveExpenseBtn);
+        cancelExpenseBtn = (Button) findViewById(R.id.cancelExpenseBtn);
 
-        saveLogBtn.setOnClickListener(saveLogBtnOnClickListener);
-        cancelLogBtn.setOnClickListener(cancelLogBtnOnClickListener);
+        saveExpenseBtn.setOnClickListener(saveExpenseBtnOnClickListener);
+        cancelExpenseBtn.setOnClickListener(cancelExpenseBtnOnClickListener);
     }
 
     // 확인 버튼 클릭 리스너
-    private View.OnClickListener saveLogBtnOnClickListener = new View.OnClickListener() {
+    private View.OnClickListener saveExpenseBtnOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            logTitle = inputLogTitle.getText().toString();
+            expenseTitle = inputExpenseTitle.getText().toString();
 
             //데이터 전달하기
             Intent intent = new Intent();
-            intent.putExtra("title", logTitle);
+            intent.putExtra("expenseTitle", expenseTitle);
             setResult(RESULT_OK, intent);
 //            setResult(1, intent);
 
@@ -62,7 +54,7 @@ public class InputTitlePopupActivtiy extends Activity {
     };
 
     // 취소 버튼 클릭 리스너
-    private View.OnClickListener cancelLogBtnOnClickListener = new View.OnClickListener() {
+    private View.OnClickListener cancelExpenseBtnOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
 
@@ -77,7 +69,6 @@ public class InputTitlePopupActivtiy extends Activity {
         if(event.getAction()==MotionEvent.ACTION_OUTSIDE){
             return false;
         }
-
         return true;
     }
 

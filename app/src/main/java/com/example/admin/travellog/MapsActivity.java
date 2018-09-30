@@ -57,7 +57,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private int recordedPathSize;
 
-    private FloatingActionButton mMemoButton;
+    private FloatingActionButton mMemoButton, mExpenseButton;
     private MemoDAO memoDAO;
 
     private TrackingHistory trackingHistory;
@@ -122,6 +122,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mStopButton.setOnClickListener(mOnStopButtonClickListener);
         mMemoButton = (FloatingActionButton) findViewById(R.id.memo_fab);
         mMemoButton.setOnClickListener(mOnMemoButtonClickListener);
+        mExpenseButton = (FloatingActionButton) findViewById(R.id.expense_fab);
+        mExpenseButton.setOnClickListener(mOnExpenseButtonOnClickListener);
     }
 
     private void addMarker() {
@@ -323,6 +325,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             onResume();
         }
+
+        // 경비 저장 후 돌아올 때
+        if(requestCode==3){
+//            if(resultCode==1){
+            if(resultCode==RESULT_OK){
+
+            }
+
+            onResume();
+        }
     }
 
     //정보창 클릭 리스너
@@ -424,6 +436,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             intent.putExtra("memoLatitude", mCurrentLocation.getLatitude());
             intent.putExtra("memoLongitude", mCurrentLocation.getLongitude());
             startActivityForResult(intent, 2);
+        }
+    };
+
+    // 경비 버튼 클릭 리스너
+    private View.OnClickListener mOnExpenseButtonOnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+
+            //데이터 담아서 팝업(액티비티) 호출
+            Intent intent = new Intent(MapsActivity.this, ExpensePopupActivity.class);
+//            intent.putExtra("memoLatitude", mCurrentLocation.getLatitude());
+//            intent.putExtra("memoLongitude", mCurrentLocation.getLongitude());
+            startActivityForResult(intent, 3);
         }
     };
 }

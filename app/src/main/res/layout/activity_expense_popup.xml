@@ -19,8 +19,9 @@
             android:layout_weight="1"
             android:background="@color/cast_intro_overlay_button_background_color"
             android:gravity="center_vertical|center"
-            android:text="메모입력"
-            android:textColor="@color/common_google_signin_btn_text_light_focused" />
+            android:text="경비 입력"
+            android:textColor="@color/common_google_signin_btn_text_light_focused"
+            android:textStyle="bold" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -42,7 +43,7 @@
                 android:textSize="12sp" />
 
             <EditText
-                android:id="@+id/inputMemoTitle"
+                android:id="@+id/inputExpenseTitle"
                 android:layout_width="180dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -71,7 +72,7 @@
                 android:textSize="12sp" />
 
             <EditText
-                android:id="@+id/inputMemoContent"
+                android:id="@+id/inputExpenseContent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -88,7 +89,7 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/saveMemoBtn"
+                android:id="@+id/saveExpenseBtn"
                 android:layout_width="60dp"
                 android:layout_height="35dp"
                 android:layout_marginLeft="50dp"
@@ -98,7 +99,7 @@
                 android:textColor="@color/common_google_signin_btn_text_light_focused" />
 
             <Button
-                android:id="@+id/cancelMemoBtn"
+                android:id="@+id/cancelExpenseBtn"
                 android:layout_width="60dp"
                 android:layout_height="35dp"
                 android:layout_marginRight="50dp"

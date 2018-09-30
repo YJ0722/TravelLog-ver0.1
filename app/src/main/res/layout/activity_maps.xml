@@ -13,15 +13,33 @@
         android:layout_weight="1"
         tools:context="com.massivcode.choisfamily.tracking.MapsActivity" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/memo_fab"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="right"
-        android:clickable="true"
-        app:backgroundTint="#fafafa"
-        app:fabSize="mini"
-        app:srcCompat="@drawable/pencil" />
+        android:orientation="horizontal">
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/expense_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_weight="1"
+            android:clickable="true"
+            app:backgroundTint="#fafafa"
+            app:fabSize="mini"
+            app:srcCompat="@drawable/expense" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/memo_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_weight="1"
+            android:clickable="true"
+            app:backgroundTint="#fafafa"
+            app:fabSize="mini"
+            app:srcCompat="@drawable/pencil" />
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

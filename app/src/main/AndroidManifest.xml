@@ -38,9 +38,9 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-         <activity
-         android:name=".MainActivity"
-         android:label="@string/title_activity_maps" />
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/title_activity_maps" />
         <activity
             android:name=".MenuActivity"
             android:label="@string/title_activity_maps" />
@@ -58,7 +58,10 @@
         <activity
             android:name=".MemoPopupActivity"
             android:theme="@android:style/Theme.Dialog" />
-        <activity android:name=".MemoViewActivity"
+        <activity
+            android:name=".MemoViewActivity"
+            android:theme="@android:style/Theme.Dialog" />
+        <activity android:name=".ExpensePopupActivity"
             android:theme="@android:style/Theme.Dialog" />
     </application>
 
