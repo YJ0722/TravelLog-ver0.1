@@ -8,12 +8,14 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class MemoPopupActivity extends Activity {
 
     Button saveMemoBtn, cancelMemoBtn;
     EditText inputMemoTitle, inputMemoContent;
     String memoTitle, memoContent;
+    double memoLatitude, memoLongitude;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +27,11 @@ public class MemoPopupActivity extends Activity {
 
         initView();
 
+        Intent intent = getIntent();
+        memoLatitude = intent.getDoubleExtra("memoLatitude", 0);
+        memoLongitude = intent.getDoubleExtra("memoLongitude", 0);
+
+        Toast.makeText(MemoPopupActivity.this, "lat: " + memoLatitude + "\nlong:" + memoLongitude, Toast.LENGTH_SHORT).show();
     }
 
     private void initView() {
@@ -48,6 +55,8 @@ public class MemoPopupActivity extends Activity {
             Intent intent = new Intent();
             intent.putExtra("memoTitle", memoTitle);
             intent.putExtra("memoContent", memoContent);
+            intent.putExtra("memoLatitude", memoLatitude);
+            intent.putExtra("memoLongitude", memoLongitude);
             setResult(RESULT_OK, intent);
 //            setResult(2, intent);
 

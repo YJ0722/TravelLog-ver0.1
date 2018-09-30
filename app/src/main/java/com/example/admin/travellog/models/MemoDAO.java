@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.provider.BaseColumns;
 import android.util.Log;
 
 import com.example.admin.travellog.db.TrackingHistoryHelper;
@@ -70,5 +71,37 @@ public class MemoDAO {
         long insertedId = db.insert(Memo.class.getSimpleName(), null, values);
 
         return insertedId != -1;
+    }
+
+    public Cursor findMemoAll() {
+
+        // SELECT 작업은 읽기 작업이므로 getReadableDatabase 메소드를 이용하여 읽기 전용 database 를 얻습니다.
+        SQLiteDatabase db = mHelper.getReadableDatabase();
+
+        /**
+         * public Cursor query (String table, String[] columns, String selection, String[] selectionArgs, String groupBy, String having, String orderBy)
+         * table : 접근할 테이블명, columns : 가져올 데이터들의 컬럼명,
+         * selection : where 절의 key 들, selectionsArgs : where 절의 value 들
+         *
+         * Cursor 객체는 해당 쿼리의 결과가 담기는 객체입니다.
+         */
+        return db.query(Memo.class.getSimpleName(), null, null, null, null, null, "date" + " DESC");
+    }
+
+    /**
+     * ListView 에서 롱클릭한 메모를 삭제합니다.
+     */
+    public boolean delete(int id) {
+        // DELETE 작업은 쓰기 권한이 필요합니다.
+        SQLiteDatabase db = mHelper.getWritableDatabase();
+
+        /**
+         * public int delete (String table, String whereClause, String[] whereArgs)
+         * table : 지울 데이터가 위치하는 테이블, whereClause : 조건절, whereArgs : 조건절
+         *
+         * update 메소드와 동일하게 delete 메소드는 반영된 행의 카운트를 리턴합니다.
+         */
+        int affectedRowsCount = db.delete(TrackingHistory.class.getSimpleName(), BaseColumns._ID + " = ? ", new String[]{String.valueOf(id)});
+        return affectedRowsCount == 1;
     }
 }

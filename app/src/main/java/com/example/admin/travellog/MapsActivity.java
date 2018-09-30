@@ -25,6 +25,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.gson.Gson;
@@ -187,6 +188,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         addMarker();
         ////////
 
+        //정보창 클릭 리스너
+        googleMap.setOnInfoWindowClickListener(infoWindowClickListener);
+
+
         mMap.setMyLocationEnabled(true);
         mMap.getUiSettings().setMyLocationButtonEnabled(false);
     }
@@ -245,6 +250,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        final Memo memo;
+
         if(requestCode==1){
 //            if(resultCode==1){
             if(resultCode==RESULT_OK){
@@ -290,45 +298,44 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 String memoTitle = data.getStringExtra("memoTitle");
                 String memoContent = data.getStringExtra("memoContent");
+                double memoLatitude = data.getDoubleExtra("memoLatitude", 0);
+                double memoLongitude = data.getDoubleExtra("memoLongitude", 0);
 
                 Toast.makeText(MapsActivity.this, "t: " + memoTitle + "\nc:" + memoContent, Toast.LENGTH_SHORT).show();
-                /*
-                if(recordedPathSize > 1) {
-                    //데이터 받기
-                    String logTitle = data.getStringExtra("title");
 
-                    Toast.makeText(MapsActivity.this, logTitle, Toast.LENGTH_SHORT).show();
+                memo = new Memo(memoTitle, memoLatitude, memoLongitude, memoContent, System.currentTimeMillis());
 
-                    trackingHistory.setTitle(logTitle);
-
-                    Toast.makeText(MapsActivity.this, trackingHistory.toString(), Toast.LENGTH_SHORT).show();
-
-                    ////
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            mTrackingHistoryDAO.save(trackingHistory);
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    mSaveDialog.dismiss();
-                                    Toast.makeText(MapsActivity.this, "트래킹 기록이 저장되었습니다!", Toast.LENGTH_SHORT).show();
-                                    finish();
-                                }
-                            });
-                        }
-                    }).start();
-                    ////
-                } else {
-                    Toast.makeText(MapsActivity.this, "움직임이 적어 저장하지 않습니다!", Toast.LENGTH_SHORT).show();
-                    finish();
-                }
-
-                    */
+                // TODO : memo 객체 DB에 save
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        memoDAO.save(memo);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                mSaveDialog.dismiss();
+                                Toast.makeText(MapsActivity.this, "메모가 저장되었습니다!", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                }).start();
             }
+
+            onResume();
         }
     }
 
+    //정보창 클릭 리스너
+    GoogleMap.OnInfoWindowClickListener infoWindowClickListener = new GoogleMap.OnInfoWindowClickListener() {
+        @Override
+        public void onInfoWindowClick(Marker marker) {
+//            String markerId = marker.getId();
+//            Toast.makeText(MapsActivity.this, "정보창 클릭 Marker ID : "+markerId, Toast.LENGTH_SHORT).show();
+
+            Intent intent = new Intent(MapsActivity.this, MemoViewActivity.class);
+            startActivity(intent);
+        }
+    };
 
     private View.OnClickListener mOnToggleButtonClickListener = new View.OnClickListener() {
         @Override
@@ -414,6 +421,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             //데이터 담아서 팝업(액티비티) 호출
             Intent intent = new Intent(MapsActivity.this, MemoPopupActivity.class);
+            intent.putExtra("memoLatitude", mCurrentLocation.getLatitude());
+            intent.putExtra("memoLongitude", mCurrentLocation.getLongitude());
             startActivityForResult(intent, 2);
         }
     };
