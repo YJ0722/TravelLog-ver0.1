@@ -24,7 +24,7 @@ public class IntroActivity extends Activity {
         @Override
         public void run() {
             //Intent HomeActivity = new Intent(IntroActivity.this, MainActivity.class); //인텐트 생성(현 액티비티, 새로 실행할 액티비티)
-            Intent HomeActivity = new Intent(IntroActivity.this, MenuActivity.class);
+            Intent HomeActivity = new Intent(IntroActivity.this, LoginActivity.class);
             startActivity(HomeActivity);
             finish();
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);

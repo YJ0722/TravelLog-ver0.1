@@ -48,6 +48,11 @@ public class MenuActivity extends AppCompatActivity {
 
     }
 
+    public void clickedPlanBtn(View v) {
+        Intent intent = new Intent(this, LoginTestActivity.class);
+        startActivity(intent);
+    }
+
     // 로그 시작 이동
     public void clickedLogBtn(View v) {
         Intent intent = new Intent(this, MainActivity.class);

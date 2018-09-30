@@ -34,7 +34,7 @@
             android:layout_marginRight="70dp"
             android:layout_marginTop="10dp"
             android:onClick="clickedPlanBtn"
-            android:text="여행계획" />
+            android:text="비밀번호 설정" />
 
         <Button
             android:id="@+id/logBtn"
