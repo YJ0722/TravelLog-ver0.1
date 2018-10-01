@@ -12,6 +12,7 @@ public class TrackingHistoryHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "TrackingHistory.db";
     private static final int DATABASE_VERSION = 1;
+    // 로그 테이블 생성 SQL
     private static final String SQL_CREATE_TRACKING_HISTORY_TABLE_FORMAT = "CREATE TABLE IF NOT EXISTS TrackingHistory " +
             "(" +
             " _id INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -22,13 +23,27 @@ public class TrackingHistoryHelper extends SQLiteOpenHelper {
             "elapsedTime TEXT NOT NULL, " +
             "pathJson INTEGER NOT NULL " +
             ");";
+    // 메모 테이블 생성 SQL
     private static final String SQL_CREATE_MEMO_TABLE_FORMAT ="CREATE TABLE IF NOT EXISTS Memo " +
             "(" +
-            "memoTitle REAL NOT NULL, " +
+            "memoTitle TEXT NOT NULL, " +
             "latitude REAL NOT NULL, " +
             "longitude REAL NOT NULL, " +
             "memoContent TEXT NOT NULL, " +
             "date TEXT NOT NULL" +
+            ");";
+    // 경비 테이블 생성 SQL
+    private static final String SQL_CREATE_EXPENSE_HISTORY_TABLE_FORMAT = "CREATE TABLE IF NOT EXISTS ExpenseHistory " +
+            "("+
+            "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, "+
+            "trackingHistory_id INTEGER NOT NULL, " +
+            "expenseTitle TEXT NOT NULL, " +
+            "expenseType INTEGER NOT NULL, " +
+            "cost INTEGER NOT NULL, " +
+            "balance INTEGER NOT NULL, " +
+            "latitude REAL NOT NULL, " +
+            "longitude REAL NOT NULL, " +
+            "date REAL NOT NULL " +
             ");";
 //    private static final String SQL_CREATE_TABLE_FORMAT = "CREATE TABLE IF NOT EXISTS {0} " +
 //            "( " +
@@ -83,28 +98,30 @@ public class TrackingHistoryHelper extends SQLiteOpenHelper {
         Log.d("Tracking_history", "테이블 생성");
         db.execSQL(SQL_CREATE_MEMO_TABLE_FORMAT);
         Log.d("Memo", "테이블 생성");
+        db.execSQL(SQL_CREATE_EXPENSE_HISTORY_TABLE_FORMAT);
+        Log.d("Expense_history", "테이블 생성");
     }
 
-/*
-    public String check() {
+    /*
+        public String check() {
 
-        Field[] fields = TrackingHistory.class.getDeclaredFields();
-        ArrayList<String> fieldNames = new ArrayList<>();
-        fieldNames.add(TrackingHistory.class.getSimpleName());
-        fieldNames.add(BaseColumns._ID);
-        for (Field field : fields) {
-            fieldNames.add(field.getName());
+            Field[] fields = TrackingHistory.class.getDeclaredFields();
+            ArrayList<String> fieldNames = new ArrayList<>();
+            fieldNames.add(TrackingHistory.class.getSimpleName());
+            fieldNames.add(BaseColumns._ID);
+            for (Field field : fields) {
+                fieldNames.add(field.getName());
+            }
+
+            setStr(fieldNames.toString());
+
+            Object[] args = fieldNames.toArray();
+            String sql = MessageFormat.format(SQL_CREATE_TABLE_FORMAT, args);
+            setStr(sql);
+            return sql;
+            //db.execSQL(sql);
         }
-
-        setStr(fieldNames.toString());
-
-        Object[] args = fieldNames.toArray();
-        String sql = MessageFormat.format(SQL_CREATE_TABLE_FORMAT, args);
-        setStr(sql);
-        return sql;
-        //db.execSQL(sql);
-    }
-*/
+    */
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 

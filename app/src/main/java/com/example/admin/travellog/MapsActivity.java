@@ -16,6 +16,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.admin.travellog.models.Coord;
+import com.example.admin.travellog.models.ExpenseHistory;
+import com.example.admin.travellog.models.ExpenseHistoryDAO;
 import com.example.admin.travellog.models.Memo;
 import com.example.admin.travellog.models.MemoDAO;
 import com.example.admin.travellog.models.TrackingHistory;
@@ -24,6 +26,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -62,7 +65,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private TrackingHistory trackingHistory;
     private Memo memoBeans;
+    private ExpenseHistory expenseHistory;
     private ArrayList<Memo> memoArr;
+    private ArrayList<ExpenseHistory> expenseArr;
+    private ExpenseHistoryDAO expenseHistoryDAO;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,9 +130,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMemoButton.setOnClickListener(mOnMemoButtonClickListener);
         mExpenseButton = (FloatingActionButton) findViewById(R.id.expense_fab);
         mExpenseButton.setOnClickListener(mOnExpenseButtonOnClickListener);
+
     }
 
-    private void addMarker() {
+    // 메모 마커 추가
+    private void addMemoMarker() {
         // memoDB에서 가져온 데이터를 받을 memoArrayList 설정
         memoArr = new ArrayList<>();
 
@@ -136,7 +144,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Cursor cursor = memoDAO.findAll();
         int recordCount = cursor.getCount();    // 저장된 메모 개수
 
-        for(int i=0; i<recordCount; i++) {
+        for (int i = 0; i < recordCount; i++) {
             cursor.moveToNext();
             String memoTitle = cursor.getString(0);
             double latitude = cursor.getDouble(1);
@@ -150,10 +158,48 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             //double longitude = Double.parseDouble(longitudeStr);
             memoBeans = new Memo(memoTitle, latitude, longitude, memoContent, 0);
             Log.d("@@@@@@@", "Recode #" + i + " : " + memoBeans.getMemoTitle() + ", " + memoBeans.getLatitude() + ", " +
-                                                memoBeans.getLongitude() + ", " + memoBeans.getMemoContent());
+                    memoBeans.getLongitude() + ", " + memoBeans.getMemoContent());
 
             // 해당 memo 객체에 해당하는 마크 추가
-            mMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title(memoBeans.getMemoTitle()));//.showInfoWindow();
+            mMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)).title(memoBeans.getMemoTitle()));//.showInfoWindow();
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 18));
+            //memoArr.add(memoBeans);
+
+        }
+    }
+
+    // 경비 마커 추가
+    private void addExpenseMarker() {
+        // memoDB에서 가져온 데이터를 받을 memoArrayList 설정
+        expenseArr = new ArrayList<>();
+
+        expenseHistoryDAO = new ExpenseHistoryDAO(getApplicationContext());
+
+        // 메모 전체 목록 불러오기
+        Cursor cursor = expenseHistoryDAO.findAll();
+        int recordCount = cursor.getCount();    // 저장된 메모 개수
+
+        for(int i=0; i<recordCount; i++) {
+            cursor.moveToNext();
+            String expenseTitle = cursor.getString(0);
+            int expenseType = cursor.getInt(1);
+            int cost = cursor.getInt(2);
+            int balance = cursor.getInt(3);
+            double latitude = cursor.getDouble(4);
+            double longitude = cursor.getDouble(5);
+            long date = cursor.getLong(6);
+            //String latitudeStr = cursor.getString(0);
+            //String longitudeStr = cursor.getString(1);
+//                String memoContent = cursor.getString(3);
+
+            //double latitude = Double.parseDouble(latitudeStr);
+            //double longitude = Double.parseDouble(longitudeStr);
+            expenseHistory = new ExpenseHistory(0, expenseTitle, expenseType, cost, balance, latitude, longitude, date);
+            Log.d("@@@@@@@", "Recode #" + i + " : " + expenseHistory.getExpenseTitle() + "\n " + expenseHistory.getExpenseType() + ",\n" + expenseHistory.getCost() + "\n" + expenseHistory.getBalance() +
+                    "\n" + expenseHistory.getLatitude() + "\n" + expenseHistory.getLongitude() + "\n" + expenseHistory.getDate());
+
+            // 해당 expense 객체에 해당하는 마크 추가
+            mMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)).title(expenseHistory.getExpenseTitle()));//.showInfoWindow();
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 18));
             //memoArr.add(memoBeans);
 
@@ -186,9 +232,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             return;
         }
 
-        /////////
-        addMarker();
-        ////////
+
+        addMemoMarker();
+        addExpenseMarker();
 
         //정보창 클릭 리스너
         googleMap.setOnInfoWindowClickListener(infoWindowClickListener);
@@ -324,17 +370,56 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
 
             onResume();
+        } else {
+            onResume();
         }
 
         // 경비 저장 후 돌아올 때
+        // position 1 : 수입 (+), position 2 : 지출 (-)
+        // TODO : ExpenseDAO
+        // 1) position 1 : DAO - sum
+
+        // 2) position 2 : DAO - sub
         if(requestCode==3){
+
+            String expenseTitle;
+            int type, cost;
+
 //            if(resultCode==1){
             if(resultCode==RESULT_OK){
 
+                expenseTitle = data.getStringExtra("expenseTitle");
+                type = data.getIntExtra("type", 0);
+                cost = data.getIntExtra("cost", 0);
+                double expenseLatitude = data.getDoubleExtra("expenseLatitude", 0);
+                double expenseLongitude = data.getDoubleExtra("expenseLongitude", 0);
+
+                Toast.makeText(getBaseContext(), "expenseTitle: " + expenseTitle + "\ntype: " + type + "\ncost: " + cost, Toast.LENGTH_SHORT).show();
+
+                //TODO : 수정 필요. 해당 트래킹 기록에 해당하는 경비만 보여줄 수 있게 수정해야한다
+                expenseHistory = new ExpenseHistory(0, expenseTitle, type, cost, expenseLatitude, expenseLongitude, System.currentTimeMillis());
+
+                // expenseHistory 객체 DB에 save
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        expenseHistoryDAO.save(expenseHistory);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                mSaveDialog.dismiss();
+                                Toast.makeText(MapsActivity.this, "비용 정보가 저장되었습니다!", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                }).start();
             }
 
             onResume();
+        } else {
+            onResume();
         }
+
     }
 
     //정보창 클릭 리스너
@@ -345,7 +430,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 //            Toast.makeText(MapsActivity.this, "정보창 클릭 Marker ID : "+markerId, Toast.LENGTH_SHORT).show();
 
             Intent intent = new Intent(MapsActivity.this, MemoViewActivity.class);
-            startActivity(intent);
+            startActivityForResult(intent, 4);
         }
     };
 
@@ -371,24 +456,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 List<LatLng> recordedPath = mPolyLineOptions.getPoints();
                 recordedPathSize = recordedPath.size();
 
-                    //mSaveDialog.show();
-                    List<Coord> coords = new ArrayList<>();
-                    for (LatLng each : recordedPath) {
-                        coords.add(new Coord(each.latitude, each.longitude));
-                    }
+                //mSaveDialog.show();
+                List<Coord> coords = new ArrayList<>();
+                for (LatLng each : recordedPath) {
+                    coords.add(new Coord(each.latitude, each.longitude));
+                }
 
-                    String pathJson = new Gson().toJson(coords);
-                    double time = mTime / 1000.0;
-                    double averageSpeed = mDistance / time;
-                    trackingHistory = new TrackingHistory(mTime, averageSpeed, mDistance, pathJson, System.currentTimeMillis());
+                String pathJson = new Gson().toJson(coords);
+                double time = mTime / 1000.0;
+                double averageSpeed = mDistance / time;
+                trackingHistory = new TrackingHistory(mTime, averageSpeed, mDistance, pathJson, System.currentTimeMillis());
 
-                    //데이터 담아서 팝업(액티비티) 호출
-                    Intent intent = new Intent(MapsActivity.this, InputTitlePopupActivtiy.class);
-                    intent.putExtra("trackingHistory", trackingHistory);
-                    startActivityForResult(intent, 1);
+                //데이터 담아서 팝업(액티비티) 호출
+                Intent intent = new Intent(MapsActivity.this, InputTitlePopupActivtiy.class);
+                intent.putExtra("trackingHistory", trackingHistory);
+                startActivityForResult(intent, 1);
 
 
-                    //// 잠깐 닫아놓기!
+                //// 잠깐 닫아놓기!
                     /*
                     new Thread(new Runnable() {
                         @Override
@@ -446,10 +531,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             //데이터 담아서 팝업(액티비티) 호출
             Intent intent = new Intent(MapsActivity.this, ExpensePopupActivity.class);
-//            intent.putExtra("memoLatitude", mCurrentLocation.getLatitude());
-//            intent.putExtra("memoLongitude", mCurrentLocation.getLongitude());
+            intent.putExtra("expenseLatitude", mCurrentLocation.getLatitude());
+            intent.putExtra("expenseLongitude", mCurrentLocation.getLongitude());
+
             startActivityForResult(intent, 3);
         }
     };
 }
-

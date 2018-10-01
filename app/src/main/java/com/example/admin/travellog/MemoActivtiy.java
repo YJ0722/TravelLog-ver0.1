@@ -55,6 +55,7 @@ public class MemoActivtiy extends AppCompatActivity {
     }
 
     // 확인 버튼 클릭리스너
+
     private View.OnClickListener addMemoBtnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
