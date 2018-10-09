@@ -10,12 +10,13 @@ import android.widget.Button;
 
 public class MenuActivity extends AppCompatActivity {
 
-    // 여행 계획 버튼
-    Button planBtn;
+
     // 로그 시작 버튼
     Button logBtn;
     // 여행 목록 버튼
     Button listBtn;
+    // 설정 버튼
+    Button planBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,9 +38,9 @@ public class MenuActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
         }
 
-        planBtn = (Button) findViewById(R.id.planBtn);
         logBtn = (Button) findViewById(R.id.logBtn);
         listBtn = (Button) findViewById(R.id.listBtn);
+        planBtn = (Button) findViewById(R.id.planBtn);
 
         // 여행 계획 이동
 
@@ -48,10 +49,6 @@ public class MenuActivity extends AppCompatActivity {
 
     }
 
-    public void clickedPlanBtn(View v) {
-        Intent intent = new Intent(this, LoginTestActivity.class);
-        startActivity(intent);
-    }
 
     // 로그 시작 이동
     public void clickedLogBtn(View v) {
@@ -63,6 +60,11 @@ public class MenuActivity extends AppCompatActivity {
     // 잠깐 확인용으로 연결! 나중에 수정 필요!!
     public void clickedListBtn(View v) {
         Intent intent = new Intent(this, CheckActivtiy.class);
+        startActivity(intent);
+    }
+
+    public void clickedPlanBtn(View v) {
+        Intent intent = new Intent(this, SettingActivity.class);
         startActivity(intent);
     }
 }

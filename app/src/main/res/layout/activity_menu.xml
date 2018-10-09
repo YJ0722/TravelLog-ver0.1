@@ -24,17 +24,6 @@
         android:orientation="vertical">
 
         <Button
-            android:id="@+id/planBtn"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginLeft="70dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="70dp"
-            android:layout_marginBottom="10dp"
-            android:background="@drawable/setting"
-            android:onClick="clickedPlanBtn" />
-
-        <Button
             android:id="@+id/logBtn"
             android:layout_width="match_parent"
             android:layout_height="50dp"
@@ -55,6 +44,17 @@
             android:layout_marginBottom="10dp"
             android:background="@drawable/loglist"
             android:onClick="clickedListBtn" />
+
+        <Button
+            android:id="@+id/planBtn"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginLeft="70dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="70dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/setting"
+            android:onClick="clickedPlanBtn" />
     </LinearLayout>
 
 </LinearLayout>

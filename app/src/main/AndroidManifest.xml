@@ -66,6 +66,8 @@
         <activity android:name=".LoginActivity" />
         <activity android:name=".LoginTestActivity" />
         <activity android:name=".PasswordActivity" />
+
+        <activity android:name=".SettingActivity" />
     </application>
 
 </manifest>
