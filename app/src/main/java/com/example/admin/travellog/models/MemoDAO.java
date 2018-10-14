@@ -62,10 +62,10 @@ public class MemoDAO {
 
         // 삽입할 메모의 제목, 내용, 시간을 ContentValues 에 넣습니다.
         // 메모의 id 는 AUTO INCREMENT 이므로 추가하지 않습니다.
+        values.put("travel_no", data.getTravel_no());
         values.put("memoTitle", data.getMemoTitle());
         values.put("latitude", data.getLatitude());
         values.put("longitude", data.getLongitude());
-        values.put("memoContent", data.getMemoContent());
         values.put("date", data.getDate());
 
         long insertedId = db.insert(Memo.class.getSimpleName(), null, values);

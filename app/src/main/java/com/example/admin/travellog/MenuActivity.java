@@ -52,14 +52,15 @@ public class MenuActivity extends AppCompatActivity {
 
     // 로그 시작 이동
     public void clickedLogBtn(View v) {
-        Intent intent = new Intent(this, MainActivity.class);
+        // Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, TravelListActivity.class);
         startActivity(intent);
     }
 
     // 여행 목록 이동
     // 잠깐 확인용으로 연결! 나중에 수정 필요!!
     public void clickedListBtn(View v) {
-        Intent intent = new Intent(this, CheckActivtiy.class);
+        Intent intent = new Intent(this, TabsActivity.class);
         startActivity(intent);
     }
 

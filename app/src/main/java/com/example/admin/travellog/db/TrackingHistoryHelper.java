@@ -10,14 +10,27 @@ import android.util.Log;
  */
 public class TrackingHistoryHelper extends SQLiteOpenHelper {
 
+
+    // 각 테이블에 _id 왜 꼭 있어야 하는지 모르겠음
+    // 일단 있어야 실행되니까 만들어는 놓았는데 나중에 지울수 있으면 지우자!
     private static final String DATABASE_NAME = "TrackingHistory.db";
     private static final int DATABASE_VERSION = 1;
+    // 여행리스트 테이블 생성 SQL
+    private static final String SQL_CREATE_TRAVEL_TABLE_FORMAT ="CREATE TABLE IF NOT EXISTS Travel " +
+            "(" +
+           // " travel_no INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            " _id INTEGER PRIMARY KEY AUTOINCREMENT," +
+            "travelTitle TEXT NOT NULL, " +
+            "startDate TEXT NOT NULL, " +
+            "endDate TEXT NOT NULL" +
+            ");";
     // 로그 테이블 생성 SQL
     private static final String SQL_CREATE_TRACKING_HISTORY_TABLE_FORMAT = "CREATE TABLE IF NOT EXISTS TrackingHistory " +
             "(" +
-            " _id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            //" log_no INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            " _id INTEGER PRIMARY KEY AUTOINCREMENT," +
+            "travel_no INTEGER NOT NULL, " +
             "logTitle TEXT NOT NULL, " +
-            "averageSpeed INTEGER NOT NULL, " +
             "date REAL NOT NULL, " +
             "distance REAL NOT NULL, " +
             "elapsedTime TEXT NOT NULL, " +
@@ -26,21 +39,25 @@ public class TrackingHistoryHelper extends SQLiteOpenHelper {
     // 메모 테이블 생성 SQL
     private static final String SQL_CREATE_MEMO_TABLE_FORMAT ="CREATE TABLE IF NOT EXISTS Memo " +
             "(" +
+            //" memo_no INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            " _id INTEGER PRIMARY KEY AUTOINCREMENT," +
+            "travel_no INTEGER NOT NULL, " +
+            //"log_no INTEGER NOT NULL, " +
             "memoTitle TEXT NOT NULL, " +
             "latitude REAL NOT NULL, " +
             "longitude REAL NOT NULL, " +
-            "memoContent TEXT NOT NULL, " +
             "date TEXT NOT NULL" +
             ");";
     // 경비 테이블 생성 SQL
     private static final String SQL_CREATE_EXPENSE_HISTORY_TABLE_FORMAT = "CREATE TABLE IF NOT EXISTS ExpenseHistory " +
             "("+
-            "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, "+
-            "trackingHistory_id INTEGER NOT NULL, " +
+            //" expense_no INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, "+
+            " _id INTEGER PRIMARY KEY AUTOINCREMENT," +
+            "travel_no INTEGER NOT NULL, " +
+            "log_no INTEGER NOT NULL, " +
             "expenseTitle TEXT NOT NULL, " +
             "expenseType INTEGER NOT NULL, " +
             "cost INTEGER NOT NULL, " +
-            "balance INTEGER NOT NULL, " +
             "latitude REAL NOT NULL, " +
             "longitude REAL NOT NULL, " +
             "date REAL NOT NULL " +
@@ -93,7 +110,8 @@ public class TrackingHistoryHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-
+        db.execSQL(SQL_CREATE_TRAVEL_TABLE_FORMAT);
+        Log.d("Travel", "테이블 생성");
         db.execSQL(SQL_CREATE_TRACKING_HISTORY_TABLE_FORMAT);
         Log.d("Tracking_history", "테이블 생성");
         db.execSQL(SQL_CREATE_MEMO_TABLE_FORMAT);

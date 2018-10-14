@@ -75,7 +75,7 @@ public class MemoActivtiy extends AppCompatActivity {
                  *  메모
                  *  경비
                  **/
-                memoBeans = new Memo(memoTitleStr, location.latitude, location.longitude, memoContentStr, System.currentTimeMillis());
+                memoBeans = new Memo(memoTitleStr, location.latitude, location.longitude, System.currentTimeMillis());
                 Log.d("MemoActivity - beans : ", memoBeans.toString());
 
                 mHelper = TrackingHistoryHelper.getInstance(getApplicationContext());

@@ -5,18 +5,52 @@ package com.example.admin.travellog.models;
  */
 
 public class Memo {
+    private int travel_no;
+    //private int log_no;
+    private int memo_no;
     private String memoTitle;
     private double latitude;
     private double longitude;
     private String memoContent;
     private long date;
 
-    public Memo(String memoTitle, double latitude, double longitude, String memoContent, long date) {
+    public Memo(String memoTitle, double latitude, double longitude) {
         this.memoTitle = memoTitle;
         this.latitude = latitude;
         this.longitude = longitude;
-        this.memoContent = memoContent;
+        //this.date = date;
+    }
+    public Memo(String memoTitle, double latitude, double longitude, long date) {
+        this.memoTitle = memoTitle;
+        this.latitude = latitude;
+        this.longitude = longitude;
         this.date = date;
+    }
+
+    public Memo(int travel_no, String memoTitle, double latitude, double longitude, long date) {
+        this.travel_no = travel_no;
+        //this.log_no = log_no;
+        this.memo_no = memo_no;
+        this.memoTitle = memoTitle;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.date = date;
+    }
+
+    public int getTravel_no() {
+        return travel_no;
+    }
+
+    public void setTravel_no(int travel_no) {
+        this.travel_no = travel_no;
+    }
+
+    public int getMemo_no() {
+        return memo_no;
+    }
+
+    public void setMemo_no(int memo_no) {
+        this.memo_no = memo_no;
     }
 
     public double getLatitude() {
@@ -62,7 +96,9 @@ public class Memo {
     @Override
     public String toString() {
         return "Memo{" +
-                "memoTitle='" + memoTitle + '\'' +
+                "travel_no=" + travel_no +
+                ", memo_no=" + memo_no +
+                ", memoTitle='" + memoTitle + '\'' +
                 ", latitude=" + latitude +
                 ", longitude=" + longitude +
                 ", memoContent='" + memoContent + '\'' +

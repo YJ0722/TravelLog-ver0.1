@@ -54,7 +54,7 @@ public class MemoPopupActivity extends Activity {
             //데이터 전달하기
             Intent intent = new Intent();
             intent.putExtra("memoTitle", memoTitle);
-            intent.putExtra("memoContent", memoContent);
+            //intent.putExtra("memoContent", memoContent);
             intent.putExtra("memoLatitude", memoLatitude);
             intent.putExtra("memoLongitude", memoLongitude);
             setResult(RESULT_OK, intent);

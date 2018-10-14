@@ -45,9 +45,9 @@ public class MemoAdapter extends CursorAdapter {
             String memoTitle = cursor.getString(cursor.getColumnIndex("memoTitle"));
             double latitude = cursor.getDouble(cursor.getColumnIndex("latitude"));
             double longitude = cursor.getDouble(cursor.getColumnIndex("longitude"));
-            String memoContent = cursor.getString(cursor.getColumnIndex("memoContent"));
+            //String memoContent = cursor.getString(cursor.getColumnIndex("memoContent"));
             long date = cursor.getLong(cursor.getColumnIndex("date"));
-            memoDB = new Memo(memoTitle, latitude, longitude, memoContent, date);
+            memoDB = new Memo(memoTitle, latitude, longitude);
         }
 
         return memoDB;

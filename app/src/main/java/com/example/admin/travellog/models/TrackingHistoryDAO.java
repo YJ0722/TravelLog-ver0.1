@@ -36,13 +36,12 @@ public class TrackingHistoryDAO {
 
         // 삽입할 메모의 제목, 내용, 시간을 ContentValues 에 넣습니다.
         // 메모의 id 는 AUTO INCREMENT 이므로 추가하지 않습니다.
+        values.put("travel_no", data.getTravelNo());
         values.put("logTitle", data.getTitle());
-        values.put("elapsedTime", data.getElapsedTime());
-        // TODO : 추후 삭제 필요
-        values.put("averageSpeed", 0);
-        values.put("distance", data.getDistance());
-        values.put("pathJson", data.getPathJson());
         values.put("date", data.getDate());
+        values.put("distance", data.getDistance());
+        values.put("elapsedTime", data.getElapsedTime());
+        values.put("pathJson", data.getPathJson());
 
         /**
          * 안드로이드에서는 기본적으로 삽입, 갱신, 삭제, 조회의 기능을 하는 메소드를 구현해놓았습니다.

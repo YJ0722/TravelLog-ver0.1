@@ -58,10 +58,14 @@ public class ViewerActivity extends FragmentActivity implements OnMapReadyCallba
 
         Intent intent = getIntent();
         TrackingHistory history = intent.getParcelableExtra("data");
+        String pathJson2 = intent.getStringExtra("pathList");
 
         String pathJson = history.getPathJson();
-        ArrayList<Coord> pathList = new Gson().fromJson(pathJson, new TypeToken<ArrayList<Coord>>() {
+        Log.d("pathList 확인", pathJson);
+
+        ArrayList<Coord> pathList = new Gson().fromJson(pathJson2, new TypeToken<ArrayList<Coord>>() {
         }.getType());
+
 
         PolylineOptions polylineOptions = new PolylineOptions();
         polylineOptions.color(Color.parseColor("#3949AB"));
@@ -118,19 +122,19 @@ public class ViewerActivity extends FragmentActivity implements OnMapReadyCallba
 
         for(int i=0; i<recordCount; i++) {
             cursor.moveToNext();
-            String memoTitle = cursor.getString(0);
-            double latitude = cursor.getDouble(1);
-            double longitude = cursor.getDouble(2);
+            String memoTitle = cursor.getString(1);
+            double latitude = cursor.getDouble(2);
+            double longitude = cursor.getDouble(3);
             //String latitudeStr = cursor.getString(0);
             //String longitudeStr = cursor.getString(1);
-            String memoContent = cursor.getString(3);
+            //String memoContent = cursor.getString(3);
             //Long date = cursor.getLong(3);
 
             //double latitude = Double.parseDouble(latitudeStr);
             //double longitude = Double.parseDouble(longitudeStr);
-            memoBeans = new Memo(memoTitle, latitude, longitude, memoContent, 0);
+            memoBeans = new Memo(memoTitle, latitude, longitude,  0);
             Log.d("@@@@@@@", "Recode #" + i + " : " + memoBeans.getMemoTitle() + ", " + memoBeans.getLatitude() + ", " +
-                    memoBeans.getLongitude() + ", " + memoBeans.getMemoContent());
+                    memoBeans.getLongitude() );
 
             // 해당 memo 객체에 해당하는 마크 추가
             mMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title(memoBeans.getMemoTitle()));

@@ -33,13 +33,13 @@ public class TrackingHistoryAdapter extends CursorAdapter {
         TrackingHistory trackingHistory = null;
 
         if (cursor.moveToPosition(position)) {
+            int travelNo = cursor.getInt(cursor.getColumnIndex("_id"));
             String logTitle = cursor.getString(cursor.getColumnIndex("logTitle"));
             long elapsedTime = cursor.getLong(cursor.getColumnIndex("elapsedTime"));
-            double distance = cursor.getDouble(cursor.getColumnIndex("distance"));
-            double averageSpeed = cursor.getDouble(cursor.getColumnIndex("averageSpeed"));
+            float distance = cursor.getFloat(cursor.getColumnIndex("distance"));
             String pathJson = cursor.getString(cursor.getColumnIndex("pathJson"));
             long date = cursor.getLong(cursor.getColumnIndex("date"));
-            trackingHistory = new TrackingHistory(logTitle, elapsedTime, averageSpeed, distance, pathJson, date);
+            trackingHistory = new TrackingHistory(travelNo, logTitle, date, distance, elapsedTime, pathJson);
         }
 
         return trackingHistory;
@@ -60,13 +60,11 @@ public class TrackingHistoryAdapter extends CursorAdapter {
         String logTitle = cursor.getString(cursor.getColumnIndex("logTitle"));
         long elapsedTime = cursor.getLong(cursor.getColumnIndex("elapsedTime"));
         double distance = cursor.getDouble(cursor.getColumnIndex("distance"));
-        double averageSpeed = cursor.getDouble(cursor.getColumnIndex("averageSpeed"));
         long date = cursor.getLong(cursor.getColumnIndex("date"));
 
         holder.mLogTitle.setText(logTitle);
         holder.mTimeTextView.setText(FormatUtil.getTime(elapsedTime));
         holder.mDistanceTextView.setText(FormatUtil.getDouble(distance) + " m");
-        //holder.mAverageSpeedTextView.setText(FormatUtil.getDouble(averageSpeed) + " km/h");
         holder.mDateTextView.setText(mSimpleDateFormat.format(new Date(date)));
 
     }

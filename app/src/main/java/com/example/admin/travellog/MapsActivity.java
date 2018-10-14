@@ -70,6 +70,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private ArrayList<ExpenseHistory> expenseArr;
     private ExpenseHistoryDAO expenseHistoryDAO;
 
+    private int travelNo;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,6 +89,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         mTimer = new Timer();
         initViews();
+
+        Intent intent = getIntent();
+        travelNo = Integer.parseInt(intent.getStringExtra("travelNo"));
+        Log.d("MapsActivity에서 확인22! : " , String.valueOf(travelNo));
 
     }
 
@@ -146,19 +152,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         for (int i = 0; i < recordCount; i++) {
             cursor.moveToNext();
-            String memoTitle = cursor.getString(0);
-            double latitude = cursor.getDouble(1);
-            double longitude = cursor.getDouble(2);
+            int travel_no = cursor.getInt(1);
+            String memoTitle = cursor.getString(2);
+            double latitude = cursor.getDouble(3);
+            double longitude = cursor.getDouble(4);
             //String latitudeStr = cursor.getString(0);
             //String longitudeStr = cursor.getString(1);
-            String memoContent = cursor.getString(3);
+            //String memoContent = cursor.getString(3);
             //Long date = cursor.getLong(3);
 
             //double latitude = Double.parseDouble(latitudeStr);
             //double longitude = Double.parseDouble(longitudeStr);
-            memoBeans = new Memo(memoTitle, latitude, longitude, memoContent, 0);
+            memoBeans = new Memo(memoTitle, latitude, longitude);
             Log.d("@@@@@@@", "Recode #" + i + " : " + memoBeans.getMemoTitle() + ", " + memoBeans.getLatitude() + ", " +
-                    memoBeans.getLongitude() + ", " + memoBeans.getMemoContent());
+                    memoBeans.getLongitude());
 
             // 해당 memo 객체에 해당하는 마크 추가
             mMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)).title(memoBeans.getMemoTitle()));//.showInfoWindow();
@@ -168,44 +175,44 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    // 경비 마커 추가
-    private void addExpenseMarker() {
-        // memoDB에서 가져온 데이터를 받을 memoArrayList 설정
-        expenseArr = new ArrayList<>();
+        // 경비 마커 추가
+        private void addExpenseMarker() {
+            // memoDB에서 가져온 데이터를 받을 memoArrayList 설정
+            expenseArr = new ArrayList<>();
 
-        expenseHistoryDAO = new ExpenseHistoryDAO(getApplicationContext());
+            expenseHistoryDAO = new ExpenseHistoryDAO(getApplicationContext());
 
-        // 메모 전체 목록 불러오기
-        Cursor cursor = expenseHistoryDAO.findAll();
-        int recordCount = cursor.getCount();    // 저장된 메모 개수
+            // 메모 전체 목록 불러오기
+            Cursor cursor = expenseHistoryDAO.findAll();
+            int recordCount = cursor.getCount();    // 저장된 메모 개수
 
-        for(int i=0; i<recordCount; i++) {
-            cursor.moveToNext();
-            String expenseTitle = cursor.getString(0);
-            int expenseType = cursor.getInt(1);
-            int cost = cursor.getInt(2);
-            int balance = cursor.getInt(3);
-            double latitude = cursor.getDouble(4);
-            double longitude = cursor.getDouble(5);
-            long date = cursor.getLong(6);
-            //String latitudeStr = cursor.getString(0);
-            //String longitudeStr = cursor.getString(1);
+            for(int i=0; i<recordCount; i++) {
+                cursor.moveToNext();
+                String expenseTitle = cursor.getString(0);
+                int expenseType = cursor.getInt(1);
+                int cost = cursor.getInt(2);
+                int balance = cursor.getInt(3);
+                double latitude = cursor.getDouble(4);
+                double longitude = cursor.getDouble(5);
+                long date = cursor.getLong(6);
+                //String latitudeStr = cursor.getString(0);
+                //String longitudeStr = cursor.getString(1);
 //                String memoContent = cursor.getString(3);
 
-            //double latitude = Double.parseDouble(latitudeStr);
-            //double longitude = Double.parseDouble(longitudeStr);
-            expenseHistory = new ExpenseHistory(0, expenseTitle, expenseType, cost, balance, latitude, longitude, date);
-            Log.d("@@@@@@@", "Recode #" + i + " : " + expenseHistory.getExpenseTitle() + "\n " + expenseHistory.getExpenseType() + ",\n" + expenseHistory.getCost() + "\n" + expenseHistory.getBalance() +
-                    "\n" + expenseHistory.getLatitude() + "\n" + expenseHistory.getLongitude() + "\n" + expenseHistory.getDate());
+                //double latitude = Double.parseDouble(latitudeStr);
+                //double longitude = Double.parseDouble(longitudeStr);
+                expenseHistory = new ExpenseHistory(0, expenseTitle, expenseType, cost, balance, latitude, longitude, date);
+                Log.d("@@@@@@@", "Recode #" + i + " : " + expenseHistory.getExpenseTitle() + "\n " + expenseHistory.getExpenseType() + ",\n" + expenseHistory.getCost() + "\n" + expenseHistory.getBalance() +
+                                "\n" + expenseHistory.getLatitude() + "\n" + expenseHistory.getLongitude() + "\n" + expenseHistory.getDate());
 
-            // 해당 expense 객체에 해당하는 마크 추가
-            mMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)).title(expenseHistory.getExpenseTitle()));//.showInfoWindow();
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 18));
-            //memoArr.add(memoBeans);
+                // 해당 expense 객체에 해당하는 마크 추가
+                mMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)).title(expenseHistory.getExpenseTitle()));//.showInfoWindow();
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 18));
+                //memoArr.add(memoBeans);
 
+            }
+            //mMap.addMarker(new MarkerOptions().position(new LatLng(123, 123 )).title("메모이름")).showInfoWindow();
         }
-        //mMap.addMarker(new MarkerOptions().position(new LatLng(123, 123 )).title("메모이름")).showInfoWindow();
-    }
 
     /**
      * Manipulates the map once available.
@@ -234,7 +241,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
         addMemoMarker();
-        addExpenseMarker();
+        //addExpenseMarker();
 
         //정보창 클릭 리스너
         googleMap.setOnInfoWindowClickListener(infoWindowClickListener);
@@ -254,16 +261,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
         if (mIsTracking) {
+            Log.d("&&&&&&&&&&&&&", "&&&&&&&&");
             mCurrentLocation = location;
             mTimer.schedule(new TimerTask() {
                 @Override
                 public void run() {
+                    Log.d("****", "*****");
+                    // todo : 나중에 해제! 불편해서 잠시 주석
+                    /*
                     mCurrentSpeed = mCurrentLocation.getSpeed() * 3.6;
                     if (mCurrentSpeed > 0) {
+                    */
+                        Log.d("22222", "22222");
                         mHistory.add(mCurrentLocation);
+                        Log.d("location : ", mCurrentLocation.getLatitude() + ", " + mCurrentLocation.getLongitude());
                         mPolyLineOptions.add(new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()));
                         int size = mHistory.size();
                         if (size > 1) {
+                            Log.d("3333", "3333");
                             Location previousLocation = mHistory.get(size - 2);
                             // 누적 이동거리 (미터)
                             mDistance += mCurrentLocation.distanceTo(previousLocation);
@@ -272,6 +287,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
+                                Log.d("dddddddd", "dddddddddddd");
                                 mDistanceTextView.setText(FormatUtil.getDouble(mDistance) + " m");
                                 //mSpeedTextView.setText(FormatUtil.getDouble(mCurrentSpeed) + " km/h");
                                 mMap.clear();
@@ -279,7 +295,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()), 18));
                             }
                         });
-                    }
+                    //}
 
                     mTime += 500;
 
@@ -311,6 +327,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                     Toast.makeText(MapsActivity.this, logTitle, Toast.LENGTH_SHORT).show();
 
+                    trackingHistory.setTravelNo(travelNo);
                     trackingHistory.setTitle(logTitle);
 
                     Toast.makeText(MapsActivity.this, trackingHistory.toString(), Toast.LENGTH_SHORT).show();
@@ -345,13 +362,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             if(resultCode==RESULT_OK){
 
                 String memoTitle = data.getStringExtra("memoTitle");
-                String memoContent = data.getStringExtra("memoContent");
+                //String memoContent = data.getStringExtra("memoContent");
                 double memoLatitude = data.getDoubleExtra("memoLatitude", 0);
                 double memoLongitude = data.getDoubleExtra("memoLongitude", 0);
 
-                Toast.makeText(MapsActivity.this, "t: " + memoTitle + "\nc:" + memoContent, Toast.LENGTH_SHORT).show();
+                memo = new Memo(travelNo, memoTitle, memoLatitude, memoLongitude, System.currentTimeMillis());
 
-                memo = new Memo(memoTitle, memoLatitude, memoLongitude, memoContent, System.currentTimeMillis());
+
+                Toast.makeText(MapsActivity.this, memo.toString(), Toast.LENGTH_SHORT).show();
+
 
                 // TODO : memo 객체 DB에 save
                 new Thread(new Runnable() {
@@ -369,7 +388,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }).start();
             }
 
-            onResume();
+            updateMap();
+            //onResume();
         } else {
             onResume();
         }
@@ -430,7 +450,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 //            Toast.makeText(MapsActivity.this, "정보창 클릭 Marker ID : "+markerId, Toast.LENGTH_SHORT).show();
 
             Intent intent = new Intent(MapsActivity.this, MemoViewActivity.class);
-            startActivityForResult(intent, 4);
+            //startActivityForResult(intent, 4);
         }
     };
 
@@ -456,24 +476,26 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 List<LatLng> recordedPath = mPolyLineOptions.getPoints();
                 recordedPathSize = recordedPath.size();
 
-                //mSaveDialog.show();
-                List<Coord> coords = new ArrayList<>();
-                for (LatLng each : recordedPath) {
-                    coords.add(new Coord(each.latitude, each.longitude));
-                }
+                    //mSaveDialog.show();
+                    List<Coord> coords = new ArrayList<>();
+                    for (LatLng each : recordedPath) {
+                        coords.add(new Coord(each.latitude, each.longitude));
+                    }
 
-                String pathJson = new Gson().toJson(coords);
-                double time = mTime / 1000.0;
-                double averageSpeed = mDistance / time;
-                trackingHistory = new TrackingHistory(mTime, averageSpeed, mDistance, pathJson, System.currentTimeMillis());
+                    String pathJson = new Gson().toJson(coords);
+                    Log.d("qqqqqqqqqq", pathJson);
+                    double time = mTime / 1000.0;
+                    double averageSpeed = mDistance / time;
+                    trackingHistory = new TrackingHistory(travelNo, System.currentTimeMillis(), mDistance, mTime, pathJson);
+                    Log.d("MMMMMMMMMMMMMMM", trackingHistory.toString());
 
-                //데이터 담아서 팝업(액티비티) 호출
-                Intent intent = new Intent(MapsActivity.this, InputTitlePopupActivtiy.class);
-                intent.putExtra("trackingHistory", trackingHistory);
-                startActivityForResult(intent, 1);
+                    //데이터 담아서 팝업(액티비티) 호출
+                    Intent intent = new Intent(MapsActivity.this, InputTitlePopupActivtiy.class);
+                    intent.putExtra("trackingHistory", trackingHistory);
+                    startActivityForResult(intent, 1);
 
 
-                //// 잠깐 닫아놓기!
+                    //// 잠깐 닫아놓기!
                     /*
                     new Thread(new Runnable() {
                         @Override
@@ -538,3 +560,4 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     };
 }
+
