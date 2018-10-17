@@ -53,10 +53,13 @@ public class AddTravelPopupActivity extends Activity {
             intent.putExtra("travelTitle", travelTitle);
             intent.putExtra("travelStartDate", travelStartDate);
             intent.putExtra("travelEndDate", travelEndDate);
+            //startActivityForResult(intent, 1);
             setResult(RESULT_OK, intent);
 
             //액티비티(팝업) 닫기
             finish();
+
+
         }
     };
 

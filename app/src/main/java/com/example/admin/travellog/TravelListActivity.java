@@ -77,15 +77,14 @@ public class TravelListActivity extends AppCompatActivity implements AdapterView
                 Toast.makeText(TravelListActivity.this, "title : " + travelTitle + "\ntravelStartDate : " +
                         travelStartDate + "\ntravelEndDate : " + travelEndDate, Toast.LENGTH_SHORT).show();
 
-
-
                 final Travel travel = new Travel(travelTitle, Long.parseLong(travelStartDate), Long.parseLong(travelEndDate));
-
+                //startActivityForResult(intent, 1);
                 // TODO : memo 객체 DB에 save
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
                         travelDAO.save(travel);
+                        restartActivity();
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -117,10 +116,15 @@ public class TravelListActivity extends AppCompatActivity implements AdapterView
         @Override
         public void onClick(View v) {
 
-            startActivityForResult(new Intent(TravelListActivity.this, TravelAddActivity.class), 1);
+            startActivityForResult(new Intent(TravelListActivity.this, AddTravelPopupActivity.class), 1);
         }
     };
 
+    public void restartActivity()
+    {
+        Intent intent= new Intent(this, TravelListActivity.class);
+        startActivity(intent);
+    }
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, final long id) {
         new AlertDialog.Builder(TravelListActivity.this)
