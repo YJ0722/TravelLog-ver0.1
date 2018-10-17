@@ -90,7 +90,7 @@ public class TravelListActivity extends AppCompatActivity implements AdapterView
                             @Override
                             public void run() {
                                 //mSaveDialog.dismiss();
-                                Toast.makeText(TravelListActivity.this, "메모가 저장되었습니다!", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(TravelListActivity.this, "여행이 저장되었습니다!", Toast.LENGTH_SHORT).show();
                             }
                         });
                     }
@@ -117,7 +117,7 @@ public class TravelListActivity extends AppCompatActivity implements AdapterView
         @Override
         public void onClick(View v) {
 
-            startActivityForResult(new Intent(TravelListActivity.this, AddTravelPopupActivity.class), 1);
+            startActivityForResult(new Intent(TravelListActivity.this, TravelAddActivity.class), 1);
         }
     };
 
