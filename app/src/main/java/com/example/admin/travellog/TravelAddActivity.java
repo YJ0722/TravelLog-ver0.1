@@ -20,7 +20,6 @@ public class TravelAddActivity extends AppCompatActivity implements View.OnClick
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_travel_add);
 
-
         inputTravelTitle = (EditText) findViewById(R.id.inputTravelTitle);
         inputTravelStartDate = (EditText) findViewById(R.id.inputTravelStartDate);
         inputTravelEndDate = (EditText) findViewById(R.id.inputTravelEndDate);

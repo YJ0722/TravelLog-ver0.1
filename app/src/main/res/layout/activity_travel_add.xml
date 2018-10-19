@@ -90,7 +90,7 @@
             android:textSize="20sp" />
 
         <EditText
-            android:id="@+id/addTravelBtn"
+            android:id="@+id/inputTravelTitle"
             android:layout_width="289dp"
             android:layout_height="wrap_content"
             android:layout_alignStart="@+id/textView6"
