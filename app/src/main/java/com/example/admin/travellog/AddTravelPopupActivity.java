@@ -1,15 +1,21 @@
 package com.example.admin.travellog;
 
 import android.app.Activity;
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+
+import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 
-public class AddTravelPopupActivity extends Activity {
+import com.example.admin.travellog.fragments.MyDatePickerFragment;
+
+public class AddTravelPopupActivity extends AppCompatActivity {
 
     Button saveTravelBtn, cancelTravelBtn;
     EditText inputTravelTitle, inputTravelStartDate, inputTravelEndDate;
@@ -21,7 +27,6 @@ public class AddTravelPopupActivity extends Activity {
         //타이틀바 없애기
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_add_travel_popup);
-
         initView();
 
         //데이터 전달하기
@@ -29,16 +34,55 @@ public class AddTravelPopupActivity extends Activity {
         setResult(RESULT_OK, intent);
     }
 
+
+    public void showDatePicker(View v) {
+        DialogFragment newFragment = new MyDatePickerFragment();
+        newFragment.show(getSupportFragmentManager(), "date picker");
+
+        //String year = y;
+            /*int day = datePicker.getDayOfMonth();
+            int month = datePicker.getMonth();
+            int year =  datePicker.getYear();*/
+
+        //btn.setText("X");
+        //btn.setText();
+    }
     private void initView() {
         inputTravelTitle = (EditText) findViewById(R.id.inputTravelTitle);
+
         inputTravelStartDate = (EditText) findViewById(R.id.inputTravelStartDate);
         inputTravelEndDate = (EditText) findViewById(R.id.inputTravelEndDate);
+        inputTravelStartDate.setOnClickListener(StartDatePickerListener);
+        inputTravelEndDate.setOnClickListener(EndDatePickerListener);
+
         saveTravelBtn = (Button) findViewById(R.id.saveTravelBtn);
         cancelTravelBtn = (Button) findViewById(R.id.cancelTravelBtn);
-
         saveTravelBtn.setOnClickListener(saveLogBtnOnClickListener);
         cancelTravelBtn.setOnClickListener(cancelLogBtnOnClickListener);
     }
+
+    private View.OnClickListener StartDatePickerListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            //데이터피커 보여주기
+             showDatePicker(v);
+        }
+
+    };
+
+    private View.OnClickListener EndDatePickerListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            //데이터피커 보여주기
+            showDatePicker(v);
+        }
+
+    };
+    public void doDatePicker(View view) {
+        DialogFragment myDatePickerFragment = new MyDatePickerFragment();
+        myDatePickerFragment.show(getSupportFragmentManager(), "datePicker");
+    }
+
 
     // 확인 버튼 클릭 리스너
     private View.OnClickListener saveLogBtnOnClickListener = new View.OnClickListener() {

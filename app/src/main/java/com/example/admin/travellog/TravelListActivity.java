@@ -116,7 +116,7 @@ public class TravelListActivity extends AppCompatActivity implements AdapterView
         @Override
         public void onClick(View v) {
 
-            startActivityForResult(new Intent(TravelListActivity.this, AddTravelPopupActivity.class), 1);
+            startActivityForResult(new Intent(TravelListActivity.this, TravelAddActivity.class), 1);
         }
     };
 

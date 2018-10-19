@@ -28,7 +28,7 @@
             android:textSize="20sp" />
 
         <EditText
-            android:id="@+id/startDateBtn"
+            android:id="@+id/inputTravelStartDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBaseline="@+id/textView15"
@@ -102,7 +102,7 @@
             android:textSize="20sp" />
 
         <EditText
-            android:id="@+id/endDateBtn"
+            android:id="@+id/inputTravelEndDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/textView16"
@@ -111,6 +111,7 @@
             android:layout_marginEnd="109dp"
             android:background="@color/back"
             android:text="종료일 입력하기"
+            android:onClick="showDatePicker"
             android:textColor="@color/place_autocomplete_prediction_secondary_text"
             android:textSize="20sp" />
     </RelativeLayout>
